@@ -19,11 +19,4 @@ class Card:
       return 10
     else:
       return int(self.rank)
-
-card1 = Card("A", "Spades")
-card2 = Card("Q", "Hearts")
-card3 = Card("4", "Clubs")
-card4 = Card("A", "Spades")
-
-print(card1, card2, card3)
-print(card1 == card4)
+      

@@ -31,7 +31,3 @@ class Deck:
 
   def draw(self):
     return self.cards.pop()
-
-deck = Deck()
-print(deck)
-print(deck.draw())
