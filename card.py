@@ -14,9 +14,8 @@ class Card:
 
   def value(self):
     if self.rank == "A":
-      return 11
+        return [1, 11]
     elif self.rank in ["K", "Q", "J"]:
-      return 10
+        return [10]
     else:
-      return int(self.rank)
-      
+        return [int(self.rank)]
