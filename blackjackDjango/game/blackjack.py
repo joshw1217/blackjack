@@ -4,7 +4,7 @@ from .card import Card
 
 
 class BlackjackGame:
-    def __init__(self, balance=1000):
+    def __init__(self, balance=None):
         self.balance = balance
         self.bet = 0
         self.deck = Deck()
@@ -19,14 +19,19 @@ class BlackjackGame:
         """Start a new round and deal cards"""
         if self.round_active:
             return  # don’t start a new one mid-round
+        if bet > self.balance:
+            self.message = "Not enough balance!"
+            return
+
         self.bet = bet
+        self.balance -= bet
         self.round_active = True
         self.message = ""
         self.player = Hand()
         self.dealer = Hand()
 
         # reshuffle deck if it’s low
-        if len(self.deck.cards) < 10:
+        if len(self.deck.cards) < 18:
             self.deck.reshuffle()
 
         # deal opening hands
@@ -35,11 +40,25 @@ class BlackjackGame:
         self.dealer.add_card(self.deck.draw())
         self.dealer.add_card(self.deck.draw())
 
+        # --- For testing blackjack rules, can comment or uncomment any combination 
+        # of player vs dealer to see natural outcomes ---
+        # self.player.add_card(Card("A", "Spades"))
+        # self.player.add_card(Card("Q", "Hearts"))
+        # self.dealer.add_card(Card("A", "Diamonds"))
+        # self.dealer.add_card(Card("10", "Clubs"))
+
         # check for blackjack
-        if self.player.evaluate() == "Blackjack":
+        if self.player.evaluate() == "Blackjack" and self.dealer.evaluate() == "Blackjack":
+          self.round_active = False
+          self.balance += bet
+          self.message = "Player and Dealer both have Blackjack, round ends in push!"
+        elif self.player.evaluate() == "Blackjack":
             self.round_active = False
-            self.balance += int(bet * 1.5)
+            self.balance += int(bet * 1.5) + bet
             self.message = "Player wins with Blackjack!"
+        elif self.dealer.evaluate() == "Blackjack":
+            self.round_active = False
+            self.message = "Dealer has a natural 21 and round ends!"
 
     # --- Player Actions ---
 
@@ -59,13 +78,13 @@ class BlackjackGame:
         self.determine_winner()
 
     def player_double_down(self):
-        if not self.round_active or self.bet * 2 > self.balance:
+        if not self.round_active or self.bet > self.balance:
             return
-        self.bet *= 2
+        self.balance -= self.bet
+        self.bet += self.bet
         self.player.add_card(self.deck.draw())
         if self.player.evaluate() == "Bust":
             self.round_active = False
-            self.balance -= self.bet
             self.message = "Player busts after doubling down."
         else:
             self.play_dealer()
@@ -81,13 +100,12 @@ class BlackjackGame:
         """Compare player/dealer hands and settle balance."""
         self.round_active = False
         if self.dealer.evaluate() == "Bust":
-            self.balance += self.bet
+            self.balance += self.bet * 2
             self.message = f"Dealer busts! Player wins {self.bet}."
         elif self.player.value > self.dealer.value:
-            self.balance += self.bet
+            self.balance += self.bet * 2
             self.message = f"Player wins with {self.player.value} over dealer's {self.dealer.value}."
         elif self.player.value < self.dealer.value:
-            self.balance -= self.bet
             self.message = f"Dealer wins with {self.dealer.value} over {self.player.value}."
         else:
             self.message = "Push! No winner."

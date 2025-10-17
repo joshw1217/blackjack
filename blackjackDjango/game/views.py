@@ -12,10 +12,33 @@ def save_game(request, game):
 
 def index(request):
     game = get_game(request)
-    # if not game.round_active: TODO: Fix this so that it renders a new round when the button is pressed
-    #     game.start_round(50)
     save_game(request, game)
     return render(request, "game/index.html", {"game": game.to_dict()})
+
+def start_round(request):
+    game = get_game(request)
+
+    balance = request.POST.get("balance")
+    if balance:
+        game.balance = int(balance)
+
+    bet = request.POST.get("bet")
+    if not bet:
+        return redirect("index")
+
+    bet = int(bet)
+
+    if not game.round_active:
+        game.start_round(bet)
+        save_game(request, game)
+
+    return redirect("index")
+
+def next_round(request):
+    game = get_game(request)
+    game.start_round(50)
+    save_game(request, game)
+    return redirect("index")
 
 def hit(request):
     game = get_game(request)

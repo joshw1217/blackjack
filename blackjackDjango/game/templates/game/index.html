@@ -35,14 +35,37 @@
       <div class="card">{{ c }}</div>
     {% endfor %}
   </div>
+  <!-- For seeing text string of gamestate -->
+  <!-- <pre>{{ game|safe }}</pre> -->
+
+  {% if game.balance == None or game.balance <= 0 and not game.round_active %}
+  <form action="{% url 'start_round' %}" method="post" class="space-y-2">
+    {% csrf_token %}
+    <label for="balance">Starting Balance:</label>
+    <input type="number" id="balance" name="balance" min="100" value="1000" required>
+
+    <label for="bet">Bet Amount:</label>
+    <input type="number" id="bet" name="bet" min="10" value="50" required>
+
+    <button type="submit">Start Game</button>
+  </form>
+{% elif not game.round_active %}
+  <form action="{% url 'start_round' %}" method="post" class="space-y-2">
+    {% csrf_token %}
+    <p>Balance: {{ game.balance }}</p>
+    <label for="bet">Bet Amount:</label>
+    <input type="number" id="bet" name="bet" min="10" max="{{ game.balance }}" value="50" required>
+    <button type="submit">Start Round</button>
+  </form>
+{% endif %}
 
   <div class="buttons">
     {% if game.round_active %}
       <form action="{% url 'hit' %}" method="post">{% csrf_token %}<button>Hit</button></form>
       <form action="{% url 'stay' %}" method="post">{% csrf_token %}<button>Stay</button></form>
-      <form action="{% url 'double' %}" method="post">{% csrf_token %}<button>Double Down</button></form>
-    {% else %}
-      <form action="{% url 'reset' %}" method="post">{% csrf_token %}<button>New Round</button></form>
+      {% if game.player|length == 2 %} 
+        <form action="{% url 'double' %}" method="post">{% csrf_token %}<button>Double Down</button></form>
+      {% endif %}
     {% endif %}
   </div>
 
