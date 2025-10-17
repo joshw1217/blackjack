@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blackjack</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #0b3d0b; color: white; }
+    .cards { display: flex; justify-content: center; margin: 10px; gap: 10px; }
+    .card { background: white; color: black; border-radius: 6px; padding: 10px 14px; font-weight: bold; }
+    .buttons { margin-top: 20px; }
+    button { margin: 0 5px; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+    .log { margin-top: 20px; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Blackjack</h1>
+  <p>Balance: {{ game.balance }}</p>
+  <p>Current Bet: {{ game.bet }}</p>
+
+  <h2>Dealer</h2>
+  <div class="cards">
+    {% if game.round_active %}
+      <div class="card">{{ game.dealer.0 }}</div>
+      <div class="card">[Hidden]</div>
+    {% else %}
+      {% for c in game.dealer %}
+        <div class="card">{{ c }}</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <h2>Player</h2>
+  <div class="cards">
+    {% for c in game.player %}
+      <div class="card">{{ c }}</div>
+    {% endfor %}
+  </div>
+
+  <div class="buttons">
+    {% if game.round_active %}
+      <form action="{% url 'hit' %}" method="post">{% csrf_token %}<button>Hit</button></form>
+      <form action="{% url 'stay' %}" method="post">{% csrf_token %}<button>Stay</button></form>
+      <form action="{% url 'double' %}" method="post">{% csrf_token %}<button>Double Down</button></form>
+    {% else %}
+      <form action="{% url 'reset' %}" method="post">{% csrf_token %}<button>New Round</button></form>
+    {% endif %}
+  </div>
+
+  <div class="log">
+    <p>{{ game.message }}</p>
+  </div>
+</body>
+</html>
