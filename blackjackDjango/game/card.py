@@ -14,16 +14,15 @@ class Card:
 
   def value(self):
     if self.rank == "A":
-      return 11
+      return [1, 11]
     elif self.rank in ["K", "Q", "J"]:
-      return 10
+      return [10]
     else:
-      return int(self.rank)
+      return [int(self.rank)]
 
-card1 = Card("A", "Spades")
-card2 = Card("Q", "Hearts")
-card3 = Card("4", "Clubs")
-card4 = Card("A", "Spades")
+  def to_dict(self):
+    return {"rank": self.rank, "suit": self.suit}
 
-print(card1, card2, card3)
-print(card1 == card4)
+  @classmethod
+  def from_dict(cls, data):
+    return cls(data["rank"], data["suit"])
