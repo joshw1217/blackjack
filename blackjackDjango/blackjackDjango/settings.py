@@ -73,6 +73,8 @@ WSGI_APPLICATION = 'blackjackDjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# This is set to a simple database that contains session IDs pointing to the browser's session
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

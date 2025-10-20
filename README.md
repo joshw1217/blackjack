@@ -37,7 +37,7 @@ python3 manage.py runserver
 - I love blackjack and thought it would be fun to implement my favorite part - doubling down - which also requires
 playing with a balance and live bet
 - Because a balance is already made and functional, I would probably add splitting and insurance as the next (and final) features, as both rely on a live bet
-- There is no live database being used, so the data is being stored in the browser's cache. Once you've set an initial balance, it will persist until you clear the cache or lose the game by going to 0. Once you hit 0 you'll be prompted to enter a new balance
+- The database being used is simple and is tracking browser session IDs. Once you've set an initial balance, it will persist until you clear the cache or lose the game by going to 0. Once you hit 0 you'll be prompted to enter a new balance. I've also added a reset game button that will wipe that database session record
 - Another feature to add would be to have a button that allows you to reset your session at any time
 - The deck automatically reshuffles when under 18 cards (~1/3 cards remaining, like some casinos)
 - Blackjack pays the standard payout of 3:2
