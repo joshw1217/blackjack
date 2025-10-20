@@ -12,17 +12,10 @@ class Card:
   def __eq__(self, other):
     return self.rank == other.rank and self.suit == other.suit
 
-  def value(self):
-    if self.rank == "A":
-      return [1, 11]
-    elif self.rank in ["K", "Q", "J"]:
-      return [10]
-    else:
-      return [int(self.rank)]
-
   def to_dict(self):
     return {"rank": self.rank, "suit": self.suit}
 
+  # allows instantiation of objects from a given dictionary
   @classmethod
   def from_dict(cls, data):
     return cls(data["rank"], data["suit"])

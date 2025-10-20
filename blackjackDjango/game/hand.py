@@ -13,6 +13,7 @@ class Hand:
   def add_card(self, card):
     self.cards.append(card)
   
+  # Acts as a class attribute, computes "true" value by accounting for aces and if those aces would the hand bust
   @property
   def value(self):
     total = 0
@@ -38,9 +39,3 @@ class Hand:
       return "Blackjack"
     else:
       return self.value
-
-  def hiddenValue(self):
-    if(self.cards[0].rank == "A"):
-      return 11
-    else:
-      return self.cards[0].value()[0]

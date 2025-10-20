@@ -61,6 +61,8 @@ class BlackjackGame:
             self.message = "Dealer has a natural 21 and round ends!"
 
     # --- Player Actions ---
+    # Because balance has the bet initially subratected from it, we need to account for that when handling
+    # player acitons and settling the showdown when determining the winner
 
     def player_hit(self):
         if not self.round_active:
@@ -108,10 +110,13 @@ class BlackjackGame:
         elif self.player.value < self.dealer.value:
             self.message = f"Dealer wins with {self.dealer.value} over {self.player.value}."
         else:
+            self.balance += self.bet
             self.message = "Push! No winner."
 
     # --- Serialization Helpers ---
 
+    # this could be improved on to include a player hand evaluation which the template could use to display
+    # a "running" total of the player's current hand
     def to_dict(self):
         """Convert current state to a JSON-serializable dict."""
         return {
